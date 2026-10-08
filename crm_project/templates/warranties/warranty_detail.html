@@ -1,0 +1,102 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Warranty #{{ warranty.pk }}{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-3xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+      <a href="{% url 'warranties:list' %}" class="text-gray-400 hover:text-gray-600">← Back</a>
+      <h1 class="text-2xl font-bold text-gray-800">Warranty #{{ warranty.pk }}</h1>
+    </div>
+    <a href="{% url 'warranties:update' warranty.pk %}"
+       class="px-4 py-2 bg-yellow-500 text-white text-sm rounded-lg hover:bg-yellow-600 transition">Edit</a>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-6 space-y-6">
+    <!-- Status Banner -->
+    <div class="flex items-center justify-between p-4 rounded-lg
+      {% if warranty.status == 'active' %}bg-green-50 border border-green-200
+      {% elif warranty.status == 'expiring_soon' %}bg-yellow-50 border border-yellow-200
+      {% elif warranty.status == 'expired' %}bg-red-50 border border-red-200
+      {% else %}bg-gray-50 border border-gray-200{% endif %}">
+      <div>
+        <p class="text-sm font-medium text-gray-600">Warranty Status</p>
+        {% if warranty.status == 'active' %}
+          <p class="text-lg font-bold text-green-700">✅ Active</p>
+        {% elif warranty.status == 'expiring_soon' %}
+          <p class="text-lg font-bold text-yellow-700">⚠️ Expiring Soon</p>
+        {% elif warranty.status == 'expired' %}
+          <p class="text-lg font-bold text-red-700">❌ Expired</p>
+        {% elif warranty.status == 'claimed' %}
+          <p class="text-lg font-bold text-purple-700">🔖 Claimed</p>
+        {% else %}
+          <p class="text-lg font-bold text-gray-700">{{ warranty.get_status_display }}</p>
+        {% endif %}
+      </div>
+      <div class="text-right">
+        {% if warranty.days_remaining >= 0 %}
+          <p class="text-2xl font-bold
+            {% if warranty.days_remaining <= 30 %}text-red-600
+            {% elif warranty.days_remaining <= 90 %}text-yellow-600
+            {% else %}text-green-600{% endif %}">
+            {{ warranty.days_remaining }}
+          </p>
+          <p class="text-xs text-gray-500">days remaining</p>
+        {% else %}
+          <p class="text-2xl font-bold text-red-600">{{ warranty.days_remaining|abs }}</p>
+          <p class="text-xs text-gray-500">days overdue</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Customer</p>
+        <p class="font-semibold text-gray-800">{{ warranty.customer.full_name }}</p>
+        <p class="text-sm text-gray-500">{{ warranty.customer.phone }}</p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Product</p>
+        <p class="font-semibold text-gray-800">{{ warranty.product.name }}</p>
+        {% if warranty.serial_number %}
+        <p class="text-sm text-gray-500 font-mono">SN: {{ warranty.serial_number }}</p>
+        {% endif %}
+      </div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Warranty Type</p>
+        <p class="font-semibold text-gray-800">{{ warranty.get_warranty_type_display }}</p>
+        {% if warranty.is_extended %}
+          <span class="text-xs text-blue-600 font-medium">Extended Warranty</span>
+        {% endif %}
+      </div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Invoice</p>
+        {% if warranty.invoice %}
+          <a href="{% url 'orders:invoice_detail' warranty.invoice.pk %}" class="text-blue-600 hover:underline font-mono font-semibold">
+            {{ warranty.invoice.invoice_number }}
+          </a>
+        {% else %}
+          <p class="text-gray-500">—</p>
+        {% endif %}
+      </div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Purchase Date</p>
+        <p class="font-semibold text-gray-800">{{ warranty.purchase_date|date:"d M Y" }}</p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Warranty Period</p>
+        <p class="font-semibold text-gray-800">{{ warranty.warranty_start|date:"d M Y" }} — {{ warranty.warranty_end|date:"d M Y" }}</p>
+      </div>
+    </div>
+
+    {% if warranty.terms %}
+    <div>
+      <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Terms & Notes</p>
+      <p class="text-sm text-gray-700 whitespace-pre-line">{{ warranty.terms }}</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

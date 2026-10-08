@@ -1,0 +1,32 @@
+{% extends 'dashboard/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if form.instance.pk %}Edit Warranty{% else %}Add Warranty{% endif %}{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-3xl mx-auto">
+  <div class="flex items-center gap-3 mb-6">
+    <a href="{% url 'warranties:list' %}" class="text-gray-400 hover:text-gray-600">← Back</a>
+    <h1 class="text-2xl font-bold text-gray-800">
+      {% if form.instance.pk %}Edit Warranty #{{ form.instance.pk }}{% else %}Add Warranty{% endif %}
+    </h1>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-6">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="flex gap-3 mt-6">
+        <button type="submit"
+                class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
+          {% if form.instance.pk %}Update{% else %}Save{% endif %}
+        </button>
+        <a href="{% url 'warranties:list' %}"
+           class="px-6 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

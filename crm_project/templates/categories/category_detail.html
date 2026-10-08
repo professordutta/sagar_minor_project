@@ -1,0 +1,14 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">{{ category.name }}</h1>
+        <a href="{% url 'categories:update' category.pk %}" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">Edit</a>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+        <div><strong>Status:</strong> {% if category.is_active %}Active{% else %}Inactive{% endif %}</div>
+        <div><strong>Parent:</strong> {{ category.parent.name|default:"None" }}</div>
+        <div class="col-span-2"><strong>Description:</strong> <p>{{ category.description }}</p></div>
+    </div>
+</div>
+{% endblock %}

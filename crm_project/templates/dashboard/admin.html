@@ -1,0 +1,56 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}{{ page_title }} - CRM Dashboard{% endblock %}
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-500">
+        <h3 class="text-sm font-medium text-gray-500">Total Customers</h3>
+        <p class="text-2xl font-bold text-gray-900">{{ total_customers|default:"0" }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-green-500">
+        <h3 class="text-sm font-medium text-gray-500">Total Orders</h3>
+        <p class="text-2xl font-bold text-gray-900">{{ total_orders|default:"0" }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-yellow-500">
+        <h3 class="text-sm font-medium text-gray-500">Open Complaints</h3>
+        <p class="text-2xl font-bold text-gray-900">{{ open_complaints|default:"0" }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-red-500">
+        <h3 class="text-sm font-medium text-gray-500">Critical Complaints</h3>
+        <p class="text-2xl font-bold text-gray-900">{{ critical_complaints|default:"0" }}</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Customers</h3>
+        <ul class="divide-y divide-gray-200">
+            {% for c in recent_customers %}
+            <li class="py-3 flex justify-between">
+                <span>{{ c.full_name }} ({{ c.customer_id }})</span>
+                <span class="text-sm text-gray-500">{{ c.created_at|date:"M d, Y" }}</span>
+            </li>
+            {% empty %}
+            <li class="py-3 text-gray-500 text-sm">No recent customers.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Orders</h3>
+        <ul class="divide-y divide-gray-200">
+            {% for o in recent_orders %}
+            <li class="py-3 flex justify-between">
+                <span>{{ o.order_number }} - {{ o.customer.full_name }}</span>
+                <span class="text-sm font-semibold text-gray-700">₹{{ o.grand_total }}</span>
+            </li>
+            {% empty %}
+            <li class="py-3 text-gray-500 text-sm">No recent orders.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
+

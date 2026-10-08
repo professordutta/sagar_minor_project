@@ -1,0 +1,20 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">{{ product.name }}</h1>
+        <a href="{% url 'products:update' product.pk %}" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">Edit</a>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+        <div><strong>SKU:</strong> {{ product.sku }}</div>
+        <div><strong>Brand:</strong> {{ product.brand.name }}</div>
+        <div><strong>Category:</strong> {{ product.category.name }}</div>
+        <div><strong>Model Number:</strong> {{ product.model_number }}</div>
+        <div><strong>MRP:</strong> ₹{{ product.mrp }}</div>
+        <div><strong>Selling Price:</strong> ₹{{ product.selling_price }}</div>
+        <div><strong>Warranty:</strong> {{ product.warranty_period }} months ({{ product.get_warranty_type_display }})</div>
+        <div><strong>Status:</strong> {{ product.get_status_display }}</div>
+        <div class="col-span-2"><strong>Description:</strong> <p>{{ product.description }}</p></div>
+    </div>
+</div>
+{% endblock %}

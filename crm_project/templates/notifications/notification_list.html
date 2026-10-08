@@ -1,0 +1,24 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="bg-white shadow rounded-lg overflow-hidden max-w-4xl mx-auto">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-xl font-bold">Notifications</h2>
+    </div>
+    <ul class="divide-y divide-gray-200">
+        {% for n in notifications %}
+        <li class="p-4 {% if not n.is_read %}bg-blue-50{% endif %} flex justify-between items-center">
+            <div>
+                <p class="font-medium text-gray-900">{{ n.title }}</p>
+                <p class="text-sm text-gray-500">{{ n.message }}</p>
+                <p class="text-xs text-gray-400 mt-1">{{ n.created_at|timesince }} ago</p>
+            </div>
+            {% if not n.is_read %}
+            <a href="{% url 'notifications:mark_read' n.pk %}" class="text-sm text-blue-600 hover:underline">Mark read</a>
+            {% endif %}
+        </li>
+        {% empty %}
+        <li class="p-4 text-center text-gray-500">No notifications.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

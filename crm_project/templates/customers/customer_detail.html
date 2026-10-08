@@ -1,0 +1,152 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-gray-800">Customer 360: {{ customer.full_name }}</h1>
+    <a href="{% url 'customers:update' customer.pk %}" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">Edit Customer</a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-500">
+        <h3 class="text-sm font-medium text-gray-500">Total Purchases</h3>
+        <p class="text-2xl font-bold text-gray-900">{{ orders.count }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-green-500">
+        <h3 class="text-sm font-medium text-gray-500">Amount Spent</h3>
+        <p class="text-2xl font-bold text-gray-900">₹{{ total_spent }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-yellow-500">
+        <h3 class="text-sm font-medium text-gray-500">Warranties</h3>
+        <p class="text-2xl font-bold text-gray-900">{{ warranties.count }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-red-500">
+        <h3 class="text-sm font-medium text-gray-500">Complaints</h3>
+        <p class="text-2xl font-bold text-gray-900">{{ complaints.count }}</p>
+    </div>
+</div>
+
+<div class="bg-white shadow rounded-lg mb-6">
+    <div class="border-b border-gray-200">
+        <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs" id="tabs">
+            <a href="#" class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-target="overview">Overview</a>
+            <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-target="orders">Orders</a>
+            <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-target="warranties">Warranties</a>
+            <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-target="complaints">Complaints</a>
+        </nav>
+    </div>
+    
+    <div class="p-6">
+        <div id="overview" class="tab-content">
+            <div class="grid grid-cols-2 gap-4">
+                <div><strong>Email:</strong> {{ customer.email }}</div>
+                <div><strong>Mobile:</strong> {{ customer.mobile }}</div>
+                <div><strong>Customer ID:</strong> {{ customer.customer_id }}</div>
+                <div><strong>Type:</strong> {{ customer.get_customer_type_display }}</div>
+                <div><strong>City:</strong> {{ customer.city }}</div>
+                <div><strong>Status:</strong> {{ customer.get_account_status_display }}</div>
+                <div class="col-span-2"><strong>Address:</strong> {{ customer.address }}</div>
+            </div>
+        </div>
+        
+        <div id="orders" class="tab-content hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="text-left py-2">Order #</th>
+                        <th class="text-left py-2">Date</th>
+                        <th class="text-left py-2">Status</th>
+                        <th class="text-left py-2">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td class="py-2">{{ order.order_number }}</td>
+                        <td class="py-2">{{ order.order_date|date:"M d, Y" }}</td>
+                        <td class="py-2">{{ order.get_order_status_display }}</td>
+                        <td class="py-2">₹{{ order.grand_total }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="py-2 text-gray-500">No orders found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="warranties" class="tab-content hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="text-left py-2">Product</th>
+                        <th class="text-left py-2">Serial</th>
+                        <th class="text-left py-2">End Date</th>
+                        <th class="text-left py-2">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for warranty in warranties %}
+                    <tr>
+                        <td class="py-2">{{ warranty.product.name }}</td>
+                        <td class="py-2">{{ warranty.serial_number.serial_number }}</td>
+                        <td class="py-2">{{ warranty.warranty_end|date:"M d, Y" }}</td>
+                        <td class="py-2">{{ warranty.get_status_display }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="py-2 text-gray-500">No warranties found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="complaints" class="tab-content hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="text-left py-2">Ticket ID</th>
+                        <th class="text-left py-2">Subject</th>
+                        <th class="text-left py-2">Status</th>
+                        <th class="text-left py-2">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for complaint in complaints %}
+                    <tr>
+                        <td class="py-2">{{ complaint.ticket_id }}</td>
+                        <td class="py-2">{{ complaint.subject }}</td>
+                        <td class="py-2">{{ complaint.get_status_display }}</td>
+                        <td class="py-2">{{ complaint.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="py-2 text-gray-500">No complaints found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('#tabs a');
+    const contents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Reset tabs
+            tabs.forEach(t => {
+                t.classList.remove('border-blue-500', 'text-blue-600');
+                t.classList.add('border-transparent', 'text-gray-500');
+            });
+            // Set active tab
+            this.classList.remove('border-transparent', 'text-gray-500');
+            this.classList.add('border-blue-500', 'text-blue-600');
+            
+            // Hide all content
+            contents.forEach(c => c.classList.add('hidden'));
+            // Show target content
+            document.getElementById(this.dataset.target).classList.remove('hidden');
+        });
+    });
+});
+</script>
+{% endblock %}

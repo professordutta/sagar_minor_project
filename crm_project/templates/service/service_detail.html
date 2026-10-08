@@ -1,0 +1,18 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Service Request: {{ service_request.service_id }}</h1>
+        <a href="{% url 'service:update' service_request.pk %}" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">Edit</a>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+        <div><strong>Customer:</strong> {{ service_request.customer }}</div>
+        <div><strong>Status:</strong> {{ service_request.get_status_display }}</div>
+        <div><strong>Product:</strong> {{ service_request.product|default:"-" }}</div>
+        <div><strong>Serial Number:</strong> {{ service_request.serial_number|default:"-" }}</div>
+        <div><strong>Technician:</strong> {{ service_request.technician|default:"Unassigned" }}</div>
+        <div><strong>Scheduled Date:</strong> {{ service_request.scheduled_date|date:"M d, Y H:i"|default:"-" }}</div>
+        <div class="col-span-2"><strong>Notes:</strong> <p class="mt-2">{{ service_request.notes }}</p></div>
+    </div>
+</div>
+{% endblock %}

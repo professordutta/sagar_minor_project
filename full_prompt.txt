@@ -1,0 +1,2341 @@
+<USER_REQUEST>
+# Build a Production-Ready Consumer Relationship Management System
+
+## 1. Project Overview
+
+Build a modern, responsive **Consumer Relationship Management System (CRM)** using **Django**.
+
+The system should be designed around a large multi-brand retail business similar in concept to **Vijay Sales**, where customers purchase products across multiple brands and categories.
+
+The CRM should provide:
+
+- Customer account management
+- Customer purchase history
+- Product and brand management
+- Product category management
+- Invoice/order management
+- Warranty management
+- Complaint/ticket management
+- Service request management
+- Customer communication history
+- Customer feedback and ratings
+- Customer notifications
+- Admin dashboards
+- Customer dashboards
+- Staff/service-agent dashboards
+- Reports and analytics
+- Role-based access control
+- Audit/history tracking
+
+The system must be designed as a **scalable modular application**, not as a single monolithic page.
+
+---
+
+# 2. Technology Stack
+
+Use:
+
+### Backend
+- Python 3.x
+- Django
+- Django ORM
+- Django authentication
+- Django REST Framework where an API layer is useful
+- SQLite for initial development
+- Structure the project so PostgreSQL can easily be used in production
+
+### Frontend
+- Django Templates
+- Tailwind CSS via CDN
+- Vanilla JavaScript where possible
+- Alpine.js via CDN may be used for lightweight interactivity if useful
+- Chart.js via CDN for dashboards/charts
+
+Do NOT introduce React/Vue/Angular unless absolutely necessary.
+
+The application should primarily use:
+
+**Django + Django Templates + Tailwind CSS + JavaScript**
+
+---
+
+# 3. Environment Setup
+
+Create a Python virtual environment.
+
+Example:
+
+```bash
+python -m venv venv
+```
+
+Activation:
+
+Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Linux/macOS:
+
+```bash
+source venv/bin/activate
+```
+
+All Python dependencies must be installed inside the virtual environment.
+
+Create:
+
+```text
+requirements.txt
+```
+
+and maintain all dependencies there.
+
+The project should include a clear README containing:
+
+- Installation instructions
+- Virtual environment setup
+- Dependency installation
+- Database migration
+- Superuser creation
+- Development server startup
+- Production deployment guidance
+- Environment variable configuration
+
+Do not install Python packages globally.
+
+---
+
+# 4. Recommended Project Architecture
+
+Use a modular Django architecture.
+
+Suggested apps:
+
+```text
+crm/
+│
+├── accounts/
+├── customers/
+├── products/
+├── brands/
+├── categories/
+├── orders/
+├── warranties/
+├── complaints/
+├── service/
+├── notifications/
+├── feedback/
+├── reports/
+├── dashboard/
+├── audit/
+└── core/
+```
+
+The exact app structure may be adjusted if a better Django architecture is identified, but maintain clear separation of responsibilities.
+
+---
+
+# 5. User Roles
+
+Implement role-based access control.
+
+Minimum roles:
+
+### Super Administrator
+
+Full system access.
+
+Can:
+
+- Manage users
+- Manage roles
+- Manage customers
+- Manage products
+- Manage brands
+- Manage categories
+- Manage orders
+- Manage warranties
+- Manage complaints
+- Manage service requests
+- View reports
+- Configure system
+- View audit logs
+
+### CRM/Admin Staff
+
+Can:
+
+- Manage customers
+- View purchases
+- Create/update complaints
+- Assign complaints
+- Manage customer interactions
+- View warranties
+- Manage service requests
+- Generate reports
+
+### Service Agent
+
+Can:
+
+- View assigned complaints
+- Update complaint status
+- Add service notes
+- Schedule service
+- Update service status
+- Upload service documents/photos
+- Communicate with customer
+
+### Sales Staff
+
+Can:
+
+- View/create customers
+- View products
+- Record purchases
+- View customer purchase history
+- Register warranty
+
+### Customer
+
+Can:
+
+- Manage own profile
+- View purchases
+- View invoices
+- View warranties
+- Register products
+- Raise complaints
+- Raise service requests
+- Track complaint status
+- View communication history
+- Submit feedback
+- View notifications
+
+Use Django Groups and Permissions wherever appropriate rather than hardcoding role checks throughout the application.
+
+---
+
+# 6. Authentication
+
+Implement:
+
+- Registration
+- Login
+- Logout
+- Password reset
+- Change password
+- Profile management
+- Email verification if practical
+- Account activation/deactivation
+- Role-based dashboard redirection
+
+Customer login should be simple and user friendly.
+
+Support future authentication using:
+
+- Email
+- Mobile number
+
+Do not store passwords manually. Use Django's built-in authentication/security mechanisms.
+
+---
+
+# 7. Customer Management
+
+Create a comprehensive customer profile.
+
+Customer fields should include:
+
+```text
+Customer ID
+First Name
+Last Name
+Email
+Mobile Number
+Alternate Mobile
+Date of Birth
+Gender
+Address
+City
+State
+PIN Code
+Country
+Preferred Contact Method
+Customer Type
+Registration Date
+Account Status
+```
+
+Customer types could include:
+
+- Individual
+- Business
+- VIP
+- Corporate
+- Institutional
+
+Do not require unnecessary personal information.
+
+Customer profile should show a consolidated 360-degree view.
+
+Example:
+
+```text
+Customer 360
+--------------------------------
+Profile
+Purchases
+Orders
+Invoices
+Warranties
+Complaints
+Service Requests
+Interactions
+Feedback
+Notifications
+Loyalty
+```
+
+---
+
+# 8. Customer 360 Dashboard
+
+This is one of the most important parts of the system.
+
+When an administrator opens a customer profile, display:
+
+### Customer Summary
+
+```text
+Total Purchases
+Total Amount Spent
+Number of Orders
+Active Warranties
+Expired Warranties
+Open Complaints
+Resolved Complaints
+Pending Service Requests
+Customer Satisfaction Score
+```
+
+Below this, show tabs:
+
+```text
+Overview
+Orders
+Products
+Warranties
+Complaints
+Service
+Communication
+Feedback
+Documents
+Activity
+```
+
+The administrator should be able to understand the complete customer relationship from one screen.
+
+---
+
+# 9. Brand Management
+
+Create brand management.
+
+Example brands:
+
+```text
+Samsung
+LG
+Sony
+Apple
+Bosch
+Whirlpool
+IFB
+Haier
+Philips
+```
+
+Brand fields:
+
+```text
+Brand Name
+Logo
+Description
+Website
+Contact Information
+Status
+Created Date
+```
+
+Allow brands to be active/inactive.
+
+---
+
+# 10. Category Management
+
+Support hierarchical product categories.
+
+Example:
+
+```text
+Electronics
+    ├── Televisions
+    ├── Audio
+    ├── Cameras
+
+Home Appliances
+    ├── Refrigerators
+    ├── Washing Machines
+    ├── Air Conditioners
+    ├── Microwave Ovens
+
+Computers
+    ├── Laptops
+    ├── Desktops
+    ├── Monitors
+    ├── Accessories
+```
+
+Categories should support:
+
+- Parent category
+- Child category
+- Description
+- Image
+- Active/inactive
+
+Use a self-referencing Django model where appropriate.
+
+---
+
+# 11. Product Management
+
+Create a comprehensive product model.
+
+Fields:
+
+```text
+Product ID / SKU
+Product Name
+Brand
+Category
+Model Number
+Description
+Product Image
+MRP
+Selling Price
+Tax/GST
+Serial Number Tracking
+Warranty Period
+Warranty Type
+Product Status
+Created Date
+Updated Date
+```
+
+Support:
+
+- Multiple images
+- Product specifications
+- Brand
+- Category
+- Warranty information
+- Product status
+
+Product specifications should be flexible.
+
+For example:
+
+TV:
+
+```text
+Screen Size
+Resolution
+Panel Type
+Smart TV
+Refresh Rate
+```
+
+Refrigerator:
+
+```text
+Capacity
+Door Type
+Energy Rating
+Compressor Type
+```
+
+Avoid creating hundreds of hardcoded columns for specifications.
+
+Consider a flexible ProductAttribute/ProductSpecification structure.
+
+---
+
+# 12. Product Serial Number Management
+
+For products requiring serial tracking, support:
+
+```text
+Product
+Serial Number
+Customer
+Order
+Invoice
+Purchase Date
+Warranty Start
+Warranty End
+Status
+```
+
+Statuses:
+
+```text
+In Stock
+Sold
+Returned
+Under Service
+Warranty Claim
+Scrapped
+```
+
+This will be important for warranty and service management.
+
+---
+
+# 13. Order/Purchase Management
+
+Create an order/purchase system.
+
+Order fields:
+
+```text
+Order Number
+Customer
+Order Date
+Store/Branch
+Salesperson
+Subtotal
+Discount
+Tax
+Shipping
+Grand Total
+Payment Status
+Order Status
+```
+
+Order items:
+
+```text
+Product
+Quantity
+Unit Price
+Discount
+Tax
+Total
+Serial Number
+```
+
+Order statuses:
+
+```text
+Pending
+Confirmed
+Processing
+Ready for Delivery
+Delivered
+Cancelled
+Returned
+```
+
+Payment statuses:
+
+```text
+Pending
+Partially Paid
+Paid
+Refunded
+```
+
+---
+
+# 14. Invoice Management
+
+Each purchase should have an invoice.
+
+Store:
+
+```text
+Invoice Number
+Invoice Date
+Customer
+Order
+GST Information
+Billing Address
+Shipping Address
+Amount
+Tax
+Total
+Payment Status
+```
+
+Allow invoice PDF generation.
+
+Customers should be able to download invoices.
+
+Administrators should be able to search invoices by:
+
+- Invoice number
+- Customer
+- Order
+- Date
+- Mobile number
+
+---
+
+# 15. Warranty Management
+
+Warranty management should be a major module.
+
+For each purchased product:
+
+```text
+Warranty ID
+Customer
+Product
+Serial Number
+Invoice
+Purchase Date
+Warranty Start Date
+Warranty End Date
+Warranty Type
+Warranty Status
+Extended Warranty
+Terms
+Conditions
+```
+
+Warranty statuses:
+
+```text
+Active
+Expiring Soon
+Expired
+Claimed
+Void
+```
+
+Automatically calculate warranty status based on dates.
+
+Show:
+
+```text
+Warranty expires in 45 days
+```
+
+or:
+
+```text
+Warranty expired 12 days ago
+```
+
+Customers should see all warranties from their dashboard.
+
+---
+
+# 16. Warranty Registration
+
+Allow customers to register products.
+
+Customer can enter:
+
+```text
+Invoice Number
+Product
+Serial Number
+Purchase Date
+```
+
+Validate the information against existing purchase records.
+
+If valid:
+
+```text
+Product Registered Successfully
+Warranty Activated
+```
+
+Prevent duplicate registration.
+
+---
+
+# 17. Complaint / Ticket Management
+
+Create a complete CRM ticketing system.
+
+Customers should be able to raise complaints.
+
+Complaint fields:
+
+```text
+Ticket ID
+Customer
+Order
+Product
+Serial Number
+Category
+Subject
+Description
+Priority
+Status
+Assigned Agent
+Created Date
+Updated Date
+Expected Resolution Date
+Resolved Date
+```
+
+Categories:
+
+```text
+Product Issue
+Installation
+Delivery
+Warranty
+Payment
+Billing
+Service
+Replacement
+Refund
+Other
+```
+
+Priority:
+
+```text
+Low
+Medium
+High
+Critical
+```
+
+Status:
+
+```text
+Open
+Assigned
+In Progress
+Waiting for Customer
+Waiting for Vendor
+Escalated
+Resolved
+Closed
+Rejected
+```
+
+---
+
+# 18. Ticket Timeline
+
+Every complaint should have a timeline.
+
+Example:
+
+```text
+08 Oct 2026 09:30
+Customer created complaint
+
+08 Oct 2026 10:15
+Assigned to Rahul
+
+08 Oct 2026 11:30
+Agent contacted customer
+
+09 Oct 2026 09:00
+Technician visit scheduled
+
+09 Oct 2026 14:00
+Technician completed visit
+
+09 Oct 2026 16:00
+Complaint marked resolved
+```
+
+Do not overwrite important historical events.
+
+Maintain an immutable activity/history trail.
+
+---
+
+# 19. Complaint Assignment
+
+Admin should be able to assign tickets to:
+
+- CRM staff
+- Service agents
+- Technicians
+- Departments
+
+Support reassignment.
+
+Record:
+
+```text
+Previous Assignee
+New Assignee
+Changed By
+Date
+Reason
+```
+
+---
+
+# 20. SLA Management
+
+Implement configurable SLA rules.
+
+Example:
+
+```text
+Critical → 4 hours
+High → 8 hours
+Medium → 24 hours
+Low → 48 hours
+```
+
+The SLA should be configurable from admin settings.
+
+Show:
+
+```text
+SLA Remaining
+SLA Breached
+SLA At Risk
+```
+
+Use visual indicators on dashboards.
+
+---
+
+# 21. Escalation Management
+
+Automatically identify tickets approaching SLA breach.
+
+Support escalation levels:
+
+```text
+Level 1
+Level 2
+Manager
+Senior Management
+```
+
+Create an escalation history.
+
+---
+
+# 22. Service Management
+
+Create a dedicated service module.
+
+Service request fields:
+
+```text
+Service Request ID
+Customer
+Product
+Serial Number
+Warranty
+Complaint
+Technician
+Scheduled Date
+Visit Date
+Service Type
+Service Status
+Service Notes
+Parts Used
+Service Charges
+```
+
+Service statuses:
+
+```text
+Requested
+Scheduled
+Technician Assigned
+Technician On The Way
+Visit Completed
+Parts Required
+Repair In Progress
+Completed
+Cancelled
+```
+
+---
+
+# 23. Technician Module
+
+Technicians should have a dedicated dashboard.
+
+Show:
+
+```text
+Today's Visits
+Upcoming Visits
+Open Jobs
+Completed Jobs
+Pending Parts
+SLA Breaches
+```
+
+Technician can:
+
+- View assigned jobs
+- Accept job
+- Update status
+- Add notes
+- Upload images
+- Record parts
+- Record service charges
+- Capture customer acknowledgement
+- Close service request
+
+---
+
+# 24. Customer Communication
+
+Create a communication history.
+
+Track interactions through:
+
+```text
+Phone
+Email
+SMS
+WhatsApp
+Portal
+In Person
+```
+
+Each interaction should contain:
+
+```text
+Customer
+Agent
+Date/Time
+Channel
+Subject
+Notes
+Related Ticket
+Related Order
+```
+
+This gives administrators a complete communication history.
+
+---
+
+# 25. Internal Notes vs Customer Communication
+
+Clearly separate:
+
+### Internal Notes
+
+Visible only to staff.
+
+### Customer Messages
+
+Visible to customers.
+
+Never expose internal notes to customers.
+
+---
+
+# 26. Notifications
+
+Create a notification system.
+
+Notify customers when:
+
+- Order is confirmed
+- Order is delivered
+- Warranty is activated
+- Warranty is about to expire
+- Complaint is created
+- Complaint is assigned
+- Complaint status changes
+- Service visit is scheduled
+- Service is completed
+- Invoice is generated
+
+Start with in-app notifications.
+
+Design the notification architecture so email/SMS/WhatsApp can be integrated later.
+
+---
+
+# 27. Customer Dashboard
+
+Create a modern customer dashboard.
+
+Top summary cards:
+
+```text
+My Orders
+Active Warranties
+Open Complaints
+Pending Services
+```
+
+Dashboard sections:
+
+```text
+Recent Purchases
+Active Warranties
+Open Complaints
+Upcoming Service
+Recent Notifications
+```
+
+Quick actions:
+
+```text
+Raise Complaint
+Register Product
+View Orders
+View Warranty
+Request Service
+Download Invoice
+Contact Support
+```
+
+---
+
+# 28. Admin Dashboard
+
+Create a professional analytics dashboard.
+
+Display:
+
+```text
+Total Customers
+New Customers
+Total Orders
+Sales Value
+Open Complaints
+Critical Complaints
+Pending Service Requests
+SLA Breaches
+Active Warranties
+Expiring Warranties
+Customer Satisfaction
+```
+
+Charts:
+
+### Sales
+
+Daily/monthly/yearly sales.
+
+### Complaints
+
+Complaints by category.
+
+### Ticket Status
+
+Open vs resolved vs pending.
+
+### Brand Performance
+
+Complaints and sales by brand.
+
+### Product Category
+
+Sales by category.
+
+### Customer Growth
+
+New customers over time.
+
+### SLA Performance
+
+Tickets resolved within SLA vs breached.
+
+Use Chart.js.
+
+---
+
+# 29. Dashboard Filters
+
+Admin dashboard should support:
+
+```text
+Today
+Yesterday
+Last 7 Days
+Last 30 Days
+This Month
+Last Month
+This Quarter
+This Year
+Custom Range
+```
+
+Also filter by:
+
+```text
+Brand
+Category
+Store
+Customer
+Agent
+Ticket Priority
+Ticket Status
+```
+
+---
+
+# 30. Search
+
+Implement global search.
+
+Search customers by:
+
+```text
+Name
+Mobile
+Email
+Customer ID
+```
+
+Search products by:
+
+```text
+Product
+SKU
+Model
+Serial Number
+Brand
+```
+
+Search tickets by:
+
+```text
+Ticket ID
+Customer
+Mobile
+Product
+Serial Number
+Status
+```
+
+Use optimized database queries.
+
+---
+
+# 31. Advanced Customer Segmentation
+
+Create customer segmentation.
+
+Examples:
+
+```text
+New Customer
+Repeat Customer
+High Value Customer
+Inactive Customer
+Warranty Customer
+Frequent Complaint Customer
+VIP Customer
+```
+
+Allow admins to filter customers based on:
+
+- Purchase frequency
+- Total spending
+- Last purchase
+- Product category
+- Brand
+- Complaint history
+
+Design this so future marketing campaigns can use these segments.
+
+---
+
+# 32. Customer Feedback
+
+After complaint/service resolution, ask the customer for feedback.
+
+Example:
+
+```text
+How satisfied were you with our service?
+
+1 ⭐
+2 ⭐
+3 ⭐
+4 ⭐
+5 ⭐
+```
+
+Also allow:
+
+```text
+Comments
+```
+
+Track:
+
+```text
+CSAT
+Average Rating
+Feedback Count
+```
+
+Show trends on admin dashboard.
+
+---
+
+# 33. Customer Loyalty
+
+Create the architecture for a loyalty module.
+
+Potential fields:
+
+```text
+Loyalty Points
+Tier
+Points Earned
+Points Redeemed
+Transaction History
+```
+
+Possible tiers:
+
+```text
+Bronze
+Silver
+Gold
+Platinum
+```
+
+It does not need to be fully sophisticated initially, but the data model should support it.
+
+---
+
+# 34. Returns and Replacement
+
+Add a return/replacement module.
+
+Customer/admin can initiate:
+
+```text
+Return
+Replacement
+Refund
+Exchange
+```
+
+Capture:
+
+```text
+Order
+Product
+Reason
+Condition
+Requested Date
+Approval Status
+Resolution
+Refund Amount
+```
+
+Statuses:
+
+```text
+Requested
+Approved
+Rejected
+Pickup Scheduled
+Received
+Inspected
+Refunded
+Replaced
+Closed
+```
+
+---
+
+# 35. Documents
+
+Allow documents to be associated with:
+
+```text
+Customer
+Order
+Invoice
+Warranty
+Complaint
+Service Request
+```
+
+Examples:
+
+```text
+Invoice
+Warranty Card
+Service Report
+Purchase Proof
+Product Image
+Repair Document
+```
+
+Store files securely.
+
+Do not expose uploaded files through predictable public URLs.
+
+---
+
+# 36. Audit Logging
+
+Create a comprehensive audit log.
+
+Track important actions:
+
+```text
+User
+Action
+Object
+Object ID
+Old Value
+New Value
+Timestamp
+IP Address
+```
+
+Examples:
+
+```text
+Admin changed ticket status
+Agent reassigned complaint
+Customer changed mobile number
+Admin modified warranty
+```
+
+Audit records should not be editable by normal users.
+
+---
+
+# 37. Data Security
+
+Follow Django security best practices.
+
+Implement:
+
+- CSRF protection
+- Secure password hashing
+- Authentication checks
+- Authorization checks
+- Permission-based views
+- Secure file uploads
+- Input validation
+- ORM queries instead of raw SQL where possible
+- XSS protection
+- Clickjacking protection
+- Secure session handling
+
+Never expose sensitive customer information unnecessarily.
+
+---
+
+# 38. Admin Interface
+
+Use Django Admin for back-office configuration but also build a custom Tailwind admin dashboard.
+
+Django Admin can be used for:
+
+- Emergency administration
+- Master data
+- Configuration
+- Developer/admin operations
+
+The custom dashboard should be the primary operational interface for normal staff.
+
+---
+
+# 39. UI/UX Design
+
+Use a modern SaaS-style interface.
+
+Use Tailwind CSS via CDN.
+
+Design principles:
+
+- Clean
+- Professional
+- Responsive
+- Desktop-first for staff
+- Mobile-friendly for customers
+- Accessible
+- Consistent spacing
+- Clear typography
+- Cards
+- Tables
+- Status badges
+- Modal dialogs
+- Tabs
+- Breadcrumbs
+- Search
+- Filters
+- Pagination
+
+Suggested layout:
+
+```text
+--------------------------------------------------
+Sidebar
+--------------------------------------------------
+Dashboard
+Customers
+Orders
+Products
+Brands
+Categories
+Warranties
+Complaints
+Service
+Feedback
+Reports
+Notifications
+Settings
+--------------------------------------------------
+Main Content
+--------------------------------------------------
+```
+
+Use different navigation appropriate to each role.
+
+---
+
+# 40. Status Badge System
+
+Create reusable Tailwind components for statuses.
+
+Examples:
+
+```text
+SUCCESS
+WARNING
+DANGER
+INFO
+NEUTRAL
+```
+
+Use consistent badges for:
+
+```text
+Order Status
+Ticket Status
+Warranty Status
+Payment Status
+Service Status
+SLA Status
+```
+
+Do not duplicate styling in every template.
+
+Create reusable template components/includes.
+
+---
+
+# 41. Reusable UI Components
+
+Create reusable Django template components for:
+
+```text
+Sidebar
+Navbar
+Cards
+Tables
+Pagination
+Search
+Filters
+Modal
+Toast
+Alerts
+Status Badge
+Forms
+Empty State
+Loading State
+Confirmation Dialog
+Timeline
+Charts
+```
+
+Avoid duplicating HTML.
+
+---
+
+# 42. Responsive Design
+
+The customer portal must work well on:
+
+- Desktop
+- Laptop
+- Tablet
+- Mobile
+
+Staff dashboards should prioritize desktop/tablet but remain usable on smaller screens.
+
+---
+
+# 43. Database Design
+
+Use normalized relational models.
+
+Important relationships:
+
+```text
+Customer
+    ↓
+Order
+    ↓
+OrderItem
+    ↓
+Product
+    ↓
+Brand
+    ↓
+Category
+```
+
+And:
+
+```text
+Customer
+    ↓
+Warranty
+    ↓
+Product / Serial Number
+```
+
+And:
+
+```text
+Customer
+    ↓
+Complaint
+    ↓
+Service Request
+    ↓
+Technician
+```
+
+Use proper:
+
+- ForeignKey
+- OneToOneField
+- ManyToManyField
+
+Add indexes to fields frequently searched:
+
+```text
+customer_id
+mobile
+email
+order_number
+invoice_number
+serial_number
+ticket_id
+SKU
+```
+
+Use unique constraints where appropriate.
+
+---
+
+# 44. Soft Deletion
+
+For important business records, avoid physically deleting data.
+
+Instead support:
+
+```text
+is_active
+deleted_at
+deleted_by
+```
+
+Especially for:
+
+- Customers
+- Products
+- Orders
+- Tickets
+- Warranties
+
+Historical transactions should never disappear because someone deleted a record.
+
+---
+
+# 45. Reporting
+
+Create a reports module.
+
+Reports should include:
+
+### Customer Reports
+
+- New customers
+- Active customers
+- Repeat customers
+- High-value customers
+
+### Sales Reports
+
+- Sales by date
+- Sales by brand
+- Sales by category
+- Sales by product
+
+### Complaint Reports
+
+- Complaints by category
+- Complaints by brand
+- Complaints by product
+- Complaints by agent
+- Resolution time
+- SLA breaches
+
+### Warranty Reports
+
+- Active warranties
+- Expired warranties
+- Expiring warranties
+- Warranty claims
+
+### Service Reports
+
+- Technician performance
+- Service completion time
+- Pending services
+- Parts usage
+
+Allow CSV export.
+
+---
+
+# 46. API Architecture
+
+Use Django REST Framework where useful.
+
+Create API endpoints for future integrations.
+
+Potential endpoints:
+
+```text
+/api/customers/
+/api/products/
+/api/orders/
+/api/warranties/
+/api/complaints/
+/api/services/
+/api/notifications/
+```
+
+Use proper serializers, permissions and validation.
+
+Do not create APIs unnecessarily for every internal page.
+
+---
+
+# 47. Future Integrations
+
+Design the architecture so the following can be integrated later:
+
+```text
+POS System
+ERP
+Payment Gateway
+Email
+SMS
+WhatsApp Business API
+GST systems
+Courier/Delivery APIs
+Brand warranty APIs
+Service-center APIs
+Accounting software
+```
+
+Do not tightly couple the core application to any particular third-party provider.
+
+---
+
+# 48. AI Features — Future Ready
+
+Keep the architecture ready for AI capabilities.
+
+Potential future features:
+
+### AI Customer Assistant
+
+Customer can ask:
+
+> Where is my order?
+
+> Is my TV under warranty?
+
+> What complaints do I currently have?
+
+### AI Complaint Classification
+
+Automatically classify:
+
+```text
+Billing
+Warranty
+Technical
+Delivery
+Installation
+Replacement
+```
+
+### AI Priority Detection
+
+Detect potentially urgent complaints.
+
+### AI Agent Assistance
+
+Suggest responses to customer complaints.
+
+### Customer Sentiment Analysis
+
+Analyze complaint messages.
+
+Do not implement complex AI functionality in the first version unless it is straightforward. Keep clean service interfaces so AI can be added later.
+
+---
+
+# 49. Seed/Demo Data
+
+Create a Django management command:
+
+```bash
+python manage.py seed_demo_data
+```
+
+Populate realistic demo data:
+
+### Brands
+
+```text
+Samsung
+LG
+Sony
+Apple
+Bosch
+Whirlpool
+IFB
+Philips
+Haier
+```
+
+### Categories
+
+```text
+Televisions
+Refrigerators
+Washing Machines
+Air Conditioners
+Laptops
+Mobile Phones
+Audio
+Kitchen Appliances
+Accessories
+```
+
+Create:
+
+- 30+ products
+- 20+ customers
+- 50+ orders
+- warranties
+- complaints
+- service requests
+- technicians
+- feedback
+- notifications
+
+This will allow the dashboards to look realistic during development.
+
+---
+
+# 50. Sample Accounts
+
+Create demo accounts:
+
+```text
+admin@example.com
+crm@example.com
+agent@example.com
+technician@example.com
+customer@example.com
+```
+
+Clearly document the passwords in development documentation only.
+
+Do not hardcode production credentials.
+
+---
+
+# 51. Testing
+
+Create automated tests.
+
+Test:
+
+### Authentication
+
+- Login
+- Logout
+- Permissions
+- Unauthorized access
+
+### Customers
+
+- Create
+- Update
+- Search
+- Permissions
+
+### Orders
+
+- Create order
+- Order items
+- Invoice generation
+
+### Warranty
+
+- Warranty calculation
+- Expiry
+- Registration
+- Duplicate registration
+
+### Complaints
+
+- Creation
+- Assignment
+- Status transitions
+- SLA calculation
+
+### Service
+
+- Technician assignment
+- Scheduling
+- Completion
+
+### Security
+
+- Unauthorized customer access
+- Cross-customer data access
+- Permission boundaries
+
+A customer must NEVER be able to access another customer's data by changing an ID in a URL.
+
+---
+
+# 52. URL Design
+
+Use clean URLs.
+
+Example:
+
+```text
+/login/
+/dashboard/
+
+/customers/
+/customers/123/
+
+/orders/
+/orders/ORD-2026-0001/
+
+/products/
+/products/123/
+
+/warranties/
+/warranties/123/
+
+/complaints/
+/complaints/TKT-2026-0001/
+
+/service/
+/service/123/
+
+/reports/
+```
+
+Use UUIDs or non-sequential public identifiers where appropriate for externally exposed resources.
+
+---
+
+# 53. Environment Configuration
+
+Use environment variables for:
+
+```text
+SECRET_KEY
+DEBUG
+DATABASE_URL
+ALLOWED_HOSTS
+EMAIL_HOST
+EMAIL_PORT
+EMAIL_USERNAME
+EMAIL_PASSWORD
+```
+
+Never commit secrets to Git.
+
+Provide:
+
+```text
+.env.example
+```
+
+and:
+
+```text
+.gitignore
+```
+
+---
+
+# 54. Git Structure
+
+Create a clean Git-ready project.
+
+Do not commit:
+
+```text
+venv/
+.env
+__pycache__/
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+```
+
+Create useful commits while implementing major modules.
+
+---
+
+# 55. Documentation
+
+Create:
+
+```text
+README.md
+ARCHITECTURE.md
+DATABASE.md
+API.md
+DEPLOYMENT.md
+```
+
+Document:
+
+- Architecture
+- Models
+- Installation
+- Development
+- Testing
+- Deployment
+- Permissions
+- API
+- Future extension points
+
+---
+
+# 56. Development Phases
+
+Do NOT try to build everything at once.
+
+Implement in phases.
+
+## Phase 1 — Foundation
+
+Build:
+
+- Django project
+- Virtual environment
+- Requirements
+- Core configuration
+- Authentication
+- User roles
+- Base Tailwind layout
+- Navigation
+- Database setup
+
+Ensure this works before proceeding.
+
+---
+
+## Phase 2 — Master Data
+
+Build:
+
+- Customers
+- Brands
+- Categories
+- Products
+- Product specifications
+- Serial numbers
+
+---
+
+## Phase 3 — Transactions
+
+Build:
+
+- Orders
+- Order items
+- Invoices
+- Purchase history
+
+---
+
+## Phase 4 — Warranty
+
+Build:
+
+- Warranty
+- Warranty registration
+- Warranty tracking
+- Expiry tracking
+
+---
+
+## Phase 5 — CRM
+
+Build:
+
+- Complaints
+- Tickets
+- Assignment
+- Ticket timeline
+- SLA
+- Escalation
+- Customer communication
+
+---
+
+## Phase 6 — Service
+
+Build:
+
+- Service requests
+- Technicians
+- Scheduling
+- Service workflow
+- Parts
+- Service completion
+
+---
+
+## Phase 7 — Dashboards
+
+Build:
+
+- Admin dashboard
+- CRM dashboard
+- Service dashboard
+- Technician dashboard
+- Customer dashboard
+
+---
+
+## Phase 8 — Feedback & Loyalty
+
+Build:
+
+- Feedback
+- CSAT
+- Loyalty architecture
+- Customer segmentation
+
+---
+
+## Phase 9 — Reports
+
+Build:
+
+- Sales reports
+- Customer reports
+- Complaint reports
+- Warranty reports
+- Service reports
+- CSV exports
+
+---
+
+## Phase 10 — Hardening
+
+Perform:
+
+- Security review
+- Permission review
+- Query optimization
+- UI consistency review
+- Mobile responsiveness
+- Automated tests
+- Error handling
+- Audit logging
+
+---
+
+# 57. Important Development Rule
+
+Do not merely generate models and basic CRUD screens.
+
+The application should feel like a real enterprise CRM.
+
+For every major module consider:
+
+```text
+Create
+Read
+Update
+Search
+Filter
+Sort
+Pagination
+Permissions
+Validation
+History
+Audit
+Notifications
+Reporting
+```
+
+---
+
+# 58. Error Handling
+
+Create user-friendly error handling.
+
+Never expose Django debug pages in production.
+
+Create:
+
+```text
+400.html
+403.html
+404.html
+500.html
+```
+
+Use a consistent Tailwind design.
+
+---
+
+# 59. Performance
+
+Use:
+
+```python
+select_related()
+prefetch_related()
+```
+
+where appropriate.
+
+Avoid N+1 database queries.
+
+Use database indexes for frequently searched fields.
+
+Paginate large datasets.
+
+Do not load thousands of records into a single page.
+
+---
+
+# 60. Final UI Requirement
+
+The application should look like a polished commercial SaaS product rather than a default Django application.
+
+The visual hierarchy should clearly distinguish:
+
+```text
+Customer Portal
+CRM Staff Portal
+Service Portal
+Administration
+```
+
+Use a professional dashboard design with:
+
+- Sidebar
+- Top navigation
+- Breadcrumbs
+- KPI cards
+- Tables
+- Charts
+- Timeline components
+- Status badges
+- Search
+- Filters
+- Responsive forms
+- Toast notifications
+- Confirmation dialogs
+
+---
+
+# 61. Implementation Instructions to the AI Agent
+
+Before writing significant code:
+
+1. Analyze the complete requirements.
+2. Propose the database architecture.
+3. Identify Django apps.
+4. Identify core models and relationships.
+5. Identify permission/role architecture.
+6. Create an implementation plan.
+7. Then implement Phase 1.
+
+Do not ask unnecessary questions if reasonable assumptions can be made.
+
+Make sensible engineering decisions and document them.
+
+After each phase:
+
+1. Run migrations.
+2. Run tests.
+3. Check for Django system-check errors.
+4. Start the development server.
+5. Verify the implemented workflows.
+6. Fix errors before moving to the next phase.
+
+Never leave broken migrations or partially implemented features.
+
+---
+
+# 62. Definition of Done
+
+The project is considered complete only when:
+
+- Django application starts successfully.
+- Virtual environment contains all dependencies.
+- `requirements.txt` is complete.
+- Authentication works.
+- Role-based permissions work.
+- Customer portal works.
+- Admin/CRM dashboard works.
+- Products/brands/categories work.
+- Orders work.
+- Purchase history works.
+- Invoices work.
+- Warranty management works.
+- Complaints/tickets work.
+- SLA tracking works.
+- Service management works.
+- Technician workflow works.
+- Notifications work.
+- Customer feedback works.
+- Reports work.
+- Audit logs work.
+- Responsive UI works.
+- Demo data can be generated.
+- Automated tests pass.
+- README contains complete setup instructions.
+- No major Django warnings/errors remain.
+
+---
+
+# 63. First Task
+
+Start with **Phase 1 only**.
+
+First provide:
+
+1. Proposed project architecture
+2. Django apps
+3. Database/entity relationship design
+4. User/role architecture
+5. URL architecture
+6. Development roadmap
+
+Then create the Django project and implement:
+
+- Virtual environment instructions
+- requirements.txt
+- Django configuration
+- Core application structure
+- Custom user/profile architecture
+- Roles and permissions
+- Login/logout
+- Password reset
+- Base Tailwind layout
+- Responsive sidebar
+- Top navigation
+- Dashboard shell
+- Initial admin interface
+- README
+
+Do not proceed to Phase 2 until Phase 1 is functional and tested.
+
+After completing Phase 1, clearly report:
+
+```text
+PHASE 1 COMPLETE
+
+Implemented:
+...
+
+Files Created:
+...
+
+Dependencies:
+...
+
+Database:
+...
+
+Tests:
+...
+
+How to Run:
+...
+
+Next Phase:
+...
+```
+
+The code should be clean, maintainable, modular, secure, and production-oriented.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-08T08:13:00+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Claude Sonnet 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+<USER_REQUEST>
+continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-08T08:31:30+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Claude Sonnet 4.6 (Thinking) to Gemini 3.1 Pro (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+<USER_REQUEST>
+continue
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-08T08:37:25+05:30.
+
+The user's current state is as follows:
+Other open documents:
+- d:\sagar_minor_project\crm_project\accounts\views.py (LANGUAGE_UNSPECIFIED)
+- d:\sagar_minor_project\crm_project\core\management\commands\seed_demo_data.py (LANGUAGE_UNSPECIFIED)
+</ADDITIONAL_METADATA>

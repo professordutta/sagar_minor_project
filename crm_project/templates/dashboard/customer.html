@@ -1,0 +1,17 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Welcome, {{ request.user.first_name }}!</h1>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-500">
+        <h3 class="text-sm font-medium text-gray-500">My Orders</h3>
+        <p class="text-2xl font-bold text-gray-900">{{ orders_count|default:"0" }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 border-t-4 border-green-500">
+        <h3 class="text-sm font-medium text-gray-500">Active Warranties</h3>
+        <p class="text-2xl font-bold text-gray-900">{{ active_warranties_count|default:"0" }}</p>
+    </div>
+</div>
+{% endblock %}

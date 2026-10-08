@@ -1,0 +1,67 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Invoices{% endblock %}
+
+{% block content %}
+<div class="p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Invoices</h1>
+    <a href="{% url 'orders:list' %}" class="text-sm text-gray-500 hover:text-gray-700">← Orders</a>
+  </div>
+
+  <div class="bg-white rounded-xl shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for invoice in invoices %}
+        <tr class="hover:bg-gray-50 transition">
+          <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-blue-600 font-semibold">
+            {{ invoice.invoice_number }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+            {{ invoice.customer.full_name }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
+            <a href="{% url 'orders:detail' invoice.order.pk %}" class="text-blue-500 hover:underline">
+              {{ invoice.order.order_number }}
+            </a>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            {{ invoice.invoice_date|date:"d M Y" }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-gray-800">
+            ₹{{ invoice.grand_total }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            {% if invoice.payment_status == 'paid' %}
+              <span class="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">Paid</span>
+            {% elif invoice.payment_status == 'partially_paid' %}
+              <span class="px-2 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">Partial</span>
+            {% else %}
+              <span class="px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">{{ invoice.get_payment_status_display }}</span>
+            {% endif %}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+            <a href="{% url 'orders:invoice_detail' invoice.pk %}" class="text-blue-600 hover:text-blue-800 font-medium">View</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="px-6 py-12 text-center text-gray-400">No invoices found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
